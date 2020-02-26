@@ -9,14 +9,18 @@ fn main() {
     // The listener's accept method waits or 'blocks' until
     // we have a connection and then returns a new TcpStream
     // that we can read and write data to.
-    let mut stream = listener.accept().unwrap().0;
-    let message    = "Hello, World!";
-    let response   = format!("HTTP/1.1 200 OK\r\n\
-                              Content-Type: text/html; charset=utf-8\r\n\
-                              Content-Length: {}\r\n\
-                              \r\n\
-                              {}",
-                              message.len(),
-                              message);
-    let _          = stream.write(response.as_bytes());
+    println!("running on port 8080");
+    loop {
+        let mut stream = listener.accept().unwrap().0;
+        println!("received request, sending response");
+        let message    = "Hello, World!";
+        let response   = format!("HTTP/1.1 200 OK\r\n\
+                                  Content-Type: text/html; charset=utf-8\r\n\
+                                  Content-Length: {}\r\n\
+                                  \r\n\
+                                  {}",
+                                  message.len(),
+                                  message);
+        let _          = stream.write(response.as_bytes());
+    }
 }
