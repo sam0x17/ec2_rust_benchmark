@@ -1,26 +1,24 @@
-use std::io::Write;
+use std::io::prelude::*;
+use std::net::TcpStream;
 use std::net::TcpListener;
 
 fn main() {
-    // Bind allows us to create a connection on the port
-    // and gets it ready to accept connections.
-    let listener = TcpListener::bind("127.0.0.1:8080").unwrap();
+    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
 
-    // The listener's accept method waits or 'blocks' until
-    // we have a connection and then returns a new TcpStream
-    // that we can read and write data to.
-    println!("running on port 8080");
-    loop {
-        let mut stream = listener.accept().unwrap().0;
-        println!("received request, sending response");
-        let message    = "Hello, World!";
-        let response   = format!("HTTP/1.1 200 OK\r\n\
-                                  Content-Type: text/html; charset=utf-8\r\n\
-                                  Content-Length: {}\r\n\
-                                  \r\n\
-                                  {}",
-                                  message.len(),
-                                  message);
-        let _          = stream.write(response.as_bytes());
+    for stream in listener.incoming() {
+        let stream = stream.unwrap();
+
+        handle_connection(stream);
     }
+}
+
+fn handle_connection(mut stream: TcpStream) {
+    let mut buffer = [0; 512];
+
+    stream.read(&mut buffer).unwrap();
+
+    let response = "HTTP/1.1 200 OK\r\n\r\n";
+
+    stream.write(response.as_bytes()).unwrap();
+    stream.flush().unwrap();
 }
