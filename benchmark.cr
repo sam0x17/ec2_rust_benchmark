@@ -2,7 +2,8 @@
 require "http/client"
 
 TOTAL = 10000
-TRIGGER_URL = "http://ec2-3-92-234-158.compute-1.amazonaws.com:8080"
+#TRIGGER_URL = "http://ec2-3-92-234-158.compute-1.amazonaws.com:8080"
+TRIGGER_URL = "http://ec2-balancer-515441468.us-east-1.elb.amazonaws.com"
 
 puts "starting benchmark..."
 
